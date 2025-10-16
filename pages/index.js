@@ -6,7 +6,7 @@ export default function Home() {
 >
 
 
-  <div className="text-center bg-white/30 backdrop-blur-lg p-8 rounded-3xl shadow-lg shadow-md">
+  <div className="text-center bg-white/30 backdrop-blur-lg p-8 rounded-3xl  shadow-md">
     <h1 className="text-3xl font-bold text-gray-800">Estacionamiento</h1>
    
    <form className="rounded px-8 pt-6 pb-8 mb-4">
@@ -33,12 +33,11 @@ export default function Home() {
       Contraseña
     </label>
     <input
-      className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+      className="shadow appearance-none border border-gray rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
       id="password"
       type="password"
       placeholder="Ingrese su contraseña"
     />
-    <p className="text-red-500 text-xs italic">Por favor ingrese su contraseña.</p>
   </div>
 
   <div className="flex items-center justify-between">
