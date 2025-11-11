@@ -23,37 +23,32 @@ export default function Navmenu() {
 
       {/* Sidebar - Siempre abierto en PC, contraíble en móvil */}
       <div
-        className={`fixed top-0 left-0 h-full bg-gray-800 text-white transition-all duration-300 ease-in-out z-40 
+        className={`fixed top-0 left-0 h-full bg-gray-800 rounded-tr-4xl rounded-br-4xl text-white transition-all duration-300 ease-in-out z-40 
         md:w-64 
         ${isOpen ? 'w-64' : 'w-0'} 
         overflow-hidden`}
+        
       >
-        <div className="p-6 mt-4 md:mt-6">
-          <h2 className="text-2xl font-bold mb-6">Menú</h2>
-          <nav>
-            <ul className="space-y-4">
-              <li>
-                <a href="#" className="block py-2 px-4 hover:bg-gray-700 rounded">
-                  Inicio
-                </a>
-              </li>
-              <li>
-                <a href="#" className="block py-2 px-4 hover:bg-gray-700 rounded">
-                  Registros
-                </a>
-              </li>
-              <li>
-                <a href="#" className="block py-2 px-4 hover:bg-gray-700 rounded">
-                  Reportes
-                </a>
-              </li>
-              <li>
-                <a href="#" className="block py-2 px-4 hover:bg-gray-700 rounded">
-                  Configuración
-                </a>
-              </li>
-            </ul>
-          </nav>
+                    <h2 className="text-2xl text-center pt-5 font-bold mb-8">Menú</h2>
+
+        <div className="p-6 flex flex-col justify-center h-full text-center">
+            
+          <div>
+            <nav>
+              <ul className="space-y-4">
+                <li>
+                  <a href="/estacionamiento" className="block py-2 px-4 text-3xl hover:bg-gray-700 rounded">
+                    Inicio
+                  </a>
+                </li>
+                <li>
+                  <a href="/registros" className="block py-2 px-4 text-2xl hover:bg-gray-700 rounded">
+                    Registros
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
 
@@ -61,8 +56,8 @@ export default function Navmenu() {
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
-        />
+          className="fixed inset-0 backdrop-blur-sm bg-white/10 z-30 md:hidden"  
+      />
       )}
     </>
   );
