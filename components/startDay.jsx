@@ -9,13 +9,13 @@ export default function StartDay() {
         // Botón inicial
         <button 
           onClick={() => setDiaIniciado(true)}
-          className="bg-red-700 text-white p-3 rounded-2xl absolute"
+          className="bg-red-700 text-white p-3 rounded-2xl absolute top-3 left-20 md:top-4 md:left-80"
         >
           Comenzar Día
         </button>
       ) : (
         // Botones y span cuando el día está iniciado
-        <div className="absolute flex gap-4 items-center">
+        <div className="absolute top-3 left-20 md:top-4 md:left-80 flex gap-4 items-center">
           <button 
             onClick={() => setDiaIniciado(false)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
