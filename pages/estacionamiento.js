@@ -1,5 +1,6 @@
 // pages/estacionamiento.js
 import Navmenu from '../components/navmenu.jsx';
+import StartDay from '../components/startDay.jsx';
 
 export default function Estacionamiento() { 
   return (
@@ -12,6 +13,10 @@ export default function Estacionamiento() {
           alt="Imagen de carro animado" 
           src="/images/logobacground.png" 
         />
+
+        <StartDay />
+
+
       </div>
     </div>
   );
