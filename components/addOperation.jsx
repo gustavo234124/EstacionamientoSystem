@@ -44,7 +44,7 @@ export default function AddOperation() {
                   <input 
                     type="text" 
                     className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Nombre del cliente"
+                    placeholder="Nombre del cliente" required
                   />
                 </div>
 
@@ -55,7 +55,7 @@ export default function AddOperation() {
                   <input 
                     type="text" 
                     className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="ABC-1234"
+                    placeholder="ABC-1234" required
                   />
                 </div>
 
