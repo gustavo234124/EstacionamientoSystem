@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import AddOperation from '../components/addOperation.jsx';
 export default function StartDay() {
   const [diaIniciado, setDiaIniciado] = useState(false);
 
@@ -22,9 +22,10 @@ export default function StartDay() {
           >
             Terminar Día
           </button>
-          <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-            Agregar
-          </button>
+
+            <AddOperation />
+
+ 
           <span className="text-2xl font-bold text-gray-800">$0</span>
         </div>
       )}
