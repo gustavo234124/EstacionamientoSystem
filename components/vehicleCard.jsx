@@ -32,8 +32,8 @@ export default function VehicleCard({ vehiculo, onTerminar }) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl p-6 shadow-lg text-white">
-      {/* Nombre */}
+<div className={`bg-gradient-to-br ${vehiculo.color} rounded-2xl p-6 shadow-lg text-white`}>     
+   {/* Nombre */}
       <div className="mb-3">
         <p className="text-sm font-semibold opacity-90">Nombre</p>
         <p className="text-xl font-bold">{vehiculo.nombre}</p>
