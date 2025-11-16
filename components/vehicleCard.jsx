@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 export default function VehicleCard({ vehiculo, onTerminar }) {
-  const [tiempoTranscurrido, setTiempoTranscurrido] = useState({ horas: 0, minutos: 0 , segundos: 0 });
+  const [tiempoTranscurrido, setTiempoTranscurrido] = useState({ horas: 0, minutos: 0 });
 
   // Calcular tiempo transcurrido
   useEffect(() => {
@@ -12,9 +12,8 @@ export default function VehicleCard({ vehiculo, onTerminar }) {
       
       const horas = Math.floor(diferencia / (1000 * 60 * 60));
       const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-      const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
 
-      setTiempoTranscurrido({ horas, minutos, segundos });
+      setTiempoTranscurrido({ horas, minutos});
     }, 1000);
 
     return () => clearInterval(intervalo);
@@ -26,7 +25,6 @@ export default function VehicleCard({ vehiculo, onTerminar }) {
     return date.toLocaleTimeString('es-MX', { 
       hour: '2-digit', 
       minute: '2-digit',
-      second: '2-digit',
       hour12: true 
     });
   };
@@ -62,10 +60,6 @@ export default function VehicleCard({ vehiculo, onTerminar }) {
           <div className="text-center">
             <p className="text-xs opacity-80">Minutos</p>
             <p className="text-3xl font-bold">{tiempoTranscurrido.minutos}</p>
-          </div>
-           <div className="text-center">
-            <p className="text-xs opacity-80">Segundos</p>
-            <p className="text-3xl font-bold">{tiempoTranscurrido.segundos}</p>
           </div>
         </div>
       </div>
