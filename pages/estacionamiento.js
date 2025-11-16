@@ -1,7 +1,7 @@
 // pages/estacionamiento.js
 import Navmenu from '../components/navmenu.jsx';
 import StartDay from '../components/startDay.jsx';
-import VehicleCard from '../components/VehicleCard.jsx';
+import VehicleCard from '../components/vehicleCard.jsx';
 import { useState } from 'react';
 
 export default function Estacionamiento() {
