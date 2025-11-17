@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Navmenu from '../components/navmenu.jsx';
 import StartDay from '../components/startDay.jsx';
 import VehicleCard from '../components/VehicleCard.jsx';
-import TerminarVehiculo from '../components/endDay.jsx'; // ← Nuevo componente
+import TerminarVehiculo from '../components/endVehicle.jsx'; // ← Nuevo componente
 
 export default function Estacionamiento() {
   const [vehiculos, setVehiculos] = useState([]);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AddOperation from './addOperation.jsx';
-import EndDay from './endDay.jsx';
+import EndDay from './endVehicle.jsx';
 
 export default function StartDay({ agregarVehiculo }) {  
   const [diaIniciado, setDiaIniciado] = useState(false);
