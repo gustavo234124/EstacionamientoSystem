@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 export default function VehicleCard({ vehiculo, onTerminar }) {
   const [tiempoTranscurrido, setTiempoTranscurrido] = useState({ horas: 0, minutos: 0 });
 
-  // Calcular tiempo transcurrido
   useEffect(() => {
     const intervalo = setInterval(() => {
       const ahora = new Date();
@@ -19,7 +18,6 @@ export default function VehicleCard({ vehiculo, onTerminar }) {
     return () => clearInterval(intervalo);
   }, [vehiculo.horaEntrada]);
 
-  // Formatear hora de entrada
   const formatearHora = (fecha) => {
     const date = new Date(fecha);
     return date.toLocaleTimeString('es-MX', { 
@@ -64,7 +62,7 @@ export default function VehicleCard({ vehiculo, onTerminar }) {
         </div>
       </div>
 
-      {/* Observaciones (si existen) */}
+      {/* Observaciones*/}
       {vehiculo.observaciones && (
         <div className="mb-4 text-sm bg-black/10 rounded-lg p-2">
           <p className="font-semibold">Obs:</p>
@@ -72,13 +70,13 @@ export default function VehicleCard({ vehiculo, onTerminar }) {
         </div>
       )}
 
-      {/* Botón Terminar */}
-      <button
-        onClick={() => onTerminar(vehiculo.id)}
-        className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-colors"
-      >
-        Terminar
-      </button>
+{/* Botón Terminar */}
+<button
+  onClick={() => onTerminar(vehiculo)}  // ← Pasa todo el vehículo
+  className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-colors"
+>
+  Terminar
+</button>
     </div>
   );
 }
