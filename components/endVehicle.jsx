@@ -14,8 +14,7 @@ export default function EndDay({ isOpen, onClose, onConfirm, totalRecaudado, veh
         className="bg-cyan-50 rounded-2xl p-8 shadow-2xl max-w-md w-full mx-4"
       >
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">¿Terminar el día?</h2>
-          <p className="text-gray-600">Se guardará el resumen del día</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">¿Deseas termimar el dia?</h2>
         </div>
 
         {/* Resumen del día */}
