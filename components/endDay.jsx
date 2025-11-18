@@ -17,7 +17,6 @@ export default function EndDay({ isOpen, onClose, onConfirm, totalRecaudado, veh
                     <h2 className="text-2xl font-bold text-gray-800 mb-2">¿Deseas terminar el día?</h2>
                 </div>
 
-                {/* Resumen del día */}
                 <div className="bg-gray-100 rounded-lg p-4 mb-6">
                     <div className="flex justify-between mb-2">
                         <span className="font-semibold">Total recaudado:</span>
