@@ -16,10 +16,8 @@ export default function EndVehicle({ isOpen, vehiculo, onClose, onConfirm }) {
 
       setTiempoTotal({ horas, minutos });
 
-      // Cálculo simple: cobramos por hora o fracción
-      // Ejemplo: 1 hora 1 min = 2 horas a cobrar
+
       const horasACobrar = minutos > 0 ? horas + 1 : horas;
-      // Mínimo 1 hora
       const totalACobrar = Math.max(1, horasACobrar) * TARIFA_POR_HORA;
 
       setPrecio(totalACobrar);
