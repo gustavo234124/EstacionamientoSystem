@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import AddOperation from './addOperation.jsx';
-import EndDay from './endVehicle.jsx';
+import EndDay from './endDay.jsx';
 
-export default function StartDay({ agregarVehiculo }) {  
+export default function StartDay({ agregarVehiculo }) {
   const [diaIniciado, setDiaIniciado] = useState(false);
   const [modalEndDay, setModalEndDay] = useState(false);
 
@@ -15,7 +15,7 @@ export default function StartDay({ agregarVehiculo }) {
   return (
     <>
       {!diaIniciado ? (
-        <button 
+        <button
           onClick={() => setDiaIniciado(true)}
           className="bg-red-700 text-white p-3 rounded-2xl absolute top-3 left-20 md:top-4 md:left-80"
         >
@@ -23,21 +23,21 @@ export default function StartDay({ agregarVehiculo }) {
         </button>
       ) : (
         <div className="absolute top-3 left-20 md:top-4 md:left-80 flex gap-4 items-center">
-          <button 
+          <button
             onClick={() => setModalEndDay(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
           >
             Terminar Día
           </button>
 
-          <AddOperation agregarVehiculo={agregarVehiculo} />  
- 
+          <AddOperation agregarVehiculo={agregarVehiculo} />
+
           <span className="text-2xl font-bold text-gray-800">$0</span>
         </div>
       )}
 
       {/* Modal EndDay */}
-      <EndDay 
+      <EndDay
         isOpen={modalEndDay}
         onClose={() => setModalEndDay(false)}
         onConfirm={handleConfirmarTerminar}
