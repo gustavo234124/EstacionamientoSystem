@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Navmenu from '../components/navmenu.jsx';
 import StartDay from '../components/startDay.jsx';
 import VehicleCard from '../components/vehicleCard.jsx';
-import TerminarVehiculo from '../components/endVehicle.jsx'; // ← Nuevo componente
+import EndVehicle from '../components/endVehicle.jsx'; // ← Componente corregido
 
 export default function Estacionamiento() {
   const [vehiculos, setVehiculos] = useState([]);
@@ -42,10 +42,10 @@ export default function Estacionamiento() {
   const confirmarTerminar = (precio) => {
     // Aquí guardarías en BD el registro completo con precio
     console.log('Terminando vehículo:', vehiculoSeleccionado, 'Precio:', precio);
-    
+
     // Eliminar del tablero
     setVehiculos(vehiculos.filter(v => v.id !== vehiculoSeleccionado.id));
-    
+
     // Cerrar modal
     setModalTerminar(false);
     setVehiculoSeleccionado(null);
@@ -54,14 +54,14 @@ export default function Estacionamiento() {
   return (
     <div className="min-h-screen bg-gray-300">
       <Navmenu />
-      
+
       <div className="md:ml-64 p-4 pt-24">
         <StartDay agregarVehiculo={agregarVehiculo} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-20">
           {vehiculos.map(vehiculo => (
-            <VehicleCard 
-              key={vehiculo.id} 
+            <VehicleCard
+              key={vehiculo.id}
               vehiculo={vehiculo}
               onTerminar={abrirModalTerminar}  // ← Abre modal
             />
@@ -76,7 +76,7 @@ export default function Estacionamiento() {
       </div>
 
       {/* Modal para terminar vehículo */}
-      <TerminarVehiculo
+      <EndVehicle
         isOpen={modalTerminar}
         vehiculo={vehiculoSeleccionado}
         onClose={() => setModalTerminar(false)}
