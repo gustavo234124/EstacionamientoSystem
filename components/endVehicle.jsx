@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 export default function EndVehicle({ isOpen, vehiculo, onClose, onConfirm }) {
   const [tiempoTotal, setTiempoTotal] = useState({ horas: 0, minutos: 0 });
   const [precio, setPrecio] = useState(0);
+  const [horasStr, setHorasStr] = useState({ entrada: '', salida: '' });
   const TARIFA_POR_HORA = 15; // Puedes ajustar esto o recibirlo como prop
 
   useEffect(() => {
@@ -16,6 +17,12 @@ export default function EndVehicle({ isOpen, vehiculo, onClose, onConfirm }) {
 
       setTiempoTotal({ horas, minutos });
 
+      // Formatear horas
+      const options = { hour: '2-digit', minute: '2-digit', hour12: true };
+      setHorasStr({
+        entrada: entrada.toLocaleTimeString('es-MX', options),
+        salida: salida.toLocaleTimeString('es-MX', options)
+      });
 
       const horasACobrar = minutos > 0 ? horas + 1 : horas;
       const totalACobrar = Math.max(1, horasACobrar) * TARIFA_POR_HORA;
@@ -37,15 +44,35 @@ export default function EndVehicle({ isOpen, vehiculo, onClose, onConfirm }) {
       >
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Cobrar Vehículo</h2>
-          <p className="text-gray-500">{vehiculo.nombre}</p>
         </div>
 
         {/* Detalles del cobro */}
+
         <div className="bg-gray-50 rounded-lg p-6 mb-6 space-y-4">
+
+          <div className="flex justify-between items-center border-b pb-2">
+            <span className="text-gray-600">Nombre</span>
+            <span className="font-bold">
+              <span className="font-bold text-lg">{vehiculo.nombre}</span>
+            </span>
+          </div>
+
           <div className="flex justify-between items-center border-b pb-2">
             <span className="text-gray-600">Placas</span>
             <span className="font-bold text-lg">{vehiculo.placas}</span>
           </div>
+
+
+          <div className="flex justify-between items-center border-b pb-2">
+            <span className="text-gray-600">Hora de entrada</span>
+            <span className="font-bold text-lg">{horasStr.entrada}</span>
+          </div>
+
+          <div className="flex justify-between items-center border-b pb-2">
+            <span className="text-gray-600">Hora de salida</span>
+            <span className="font-bold text-lg">{horasStr.salida}</span>
+          </div>
+
 
           <div className="flex justify-between items-center border-b pb-2">
             <span className="text-gray-600">Tiempo Total</span>
@@ -55,7 +82,7 @@ export default function EndVehicle({ isOpen, vehiculo, onClose, onConfirm }) {
           </div>
 
           <div className="flex justify-between items-center pt-2">
-            <span className="text-lg font-semibold text-gray-800">Total a Pagar</span>
+            <span className="text-lg font-semibold text-gray-800">Precio</span>
             <span className="text-3xl font-bold text-green-600">${precio}</span>
           </div>
         </div>
