@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import AddOperation from './addOperation.jsx';
 import EndDay from './endDay.jsx';
+import CountPrice from './countPrice.jsx';
 
 export default function StartDay({ agregarVehiculo }) {
   const [diaIniciado, setDiaIniciado] = useState(false);
   const [modalEndDay, setModalEndDay] = useState(false);
 
   const handleConfirmarTerminar = () => {
-    // Aquí puedes agregar lógica para guardar en BD
     setModalEndDay(false);
     setDiaIniciado(false);
   };
@@ -32,17 +32,18 @@ export default function StartDay({ agregarVehiculo }) {
 
           <AddOperation agregarVehiculo={agregarVehiculo} />
 
-          <span className="text-2xl font-bold text-gray-800">$0</span>
+          <CountPrice />
+
         </div>
       )}
 
-      {/* Modal EndDay */}
+
       <EndDay
         isOpen={modalEndDay}
         onClose={() => setModalEndDay(false)}
         onConfirm={handleConfirmarTerminar}
-        totalRecaudado={0}  // Después lo calculas dinámicamente
-        vehiculosAtendidos={0}  // Después lo calculas dinámicamente
+        totalRecaudado={0}
+        vehiculosAtendidos={0}
       />
     </>
   );
