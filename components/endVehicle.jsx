@@ -4,7 +4,7 @@ export default function EndVehicle({ isOpen, vehiculo, onClose, onConfirm }) {
   const [tiempoTotal, setTiempoTotal] = useState({ horas: 0, minutos: 0 });
   const [precio, setPrecio] = useState(0);
   const [horasStr, setHorasStr] = useState({ entrada: '', salida: '' });
-  const TARIFA_POR_HORA = 15; // Puedes ajustar esto o recibirlo como prop
+  const TARIFA_POR_HORA = 15;
 
   useEffect(() => {
     if (vehiculo && isOpen) {
