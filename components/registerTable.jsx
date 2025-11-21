@@ -9,15 +9,15 @@ export default function RegisterTable() {
         { id: 2, fecha: '25-11-2025' },
     ]
 
-    const handleVerMas = (id) => {
-        console.log('Click en Ver más, ID:', id)
-        setRegistroSeleccionado(id)
+    const handleVerMas = (row) => {
+        console.log('Click en Ver más:', row)
+        setRegistroSeleccionado(row)
         setModalAbierto(true)
     }
 
     return (
         <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300">
+            <table className="w-250 border-collapse border border-gray-300">
                 <thead className="bg-gray-600 text-white">
                     <tr>
                         <th className="border p-3 text-left">ID</th>
@@ -35,7 +35,7 @@ export default function RegisterTable() {
                             <td className="border p-3">{row.fecha}</td>
                             <td className="border p-3">
                                 <button
-                                    onClick={() => handleVerMas(row.id)}
+                                    onClick={() => handleVerMas(row)}
                                     className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
                                 >
                                     Ver más
@@ -58,7 +58,7 @@ export default function RegisterTable() {
                     >
                         {/* Header del modal */}
                         <div className="sticky top-0 bg-gray-600 text-white p-4 flex justify-between items-center">
-                            <h2 className="text-xl font-bold">Detalles del dia  {registroSeleccionado}</h2>
+                            <h2 className="text-xl font-bold">Detalles del día {registroSeleccionado?.fecha}</h2>
                             <button
                                 onClick={() => setModalAbierto(false)}
                                 className="text-2xl hover:text-gray-200"
@@ -69,9 +69,9 @@ export default function RegisterTable() {
 
                         {/* Contenido del modal */}
                         <div className="p-4">
-                            <p className="text-gray-600 text-center py-8">
-                                Aquí irán los detalles del registro #{registroSeleccionado}
-                            </p>
+
+
+
                         </div>
 
                         {/* Footer del modal */}
