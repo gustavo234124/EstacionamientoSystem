@@ -17,26 +17,31 @@ export default function DetallesRegistroModal({
                 // Datos hardcodeados por registro
                 const detallesData = {
                     1: [
-                        { id: 1, nombre: 'Juan', placas: 'Snt1068', 'Hora Entrada': '10:00', 'Hora Salida': '11:00', 'Costo': '$10' },
-                        { id: 2, nombre: 'María', placas: 'Snt1069', 'Hora Entrada': '10:30', 'Hora Salida': '11:30', 'Costo': '$10' },
+                        { id: 1, nombre: 'Juan', placas: 'Snt1068', 'Hora Entrada': '10:00', 'Hora Salida': '11:00', 'Costo': '$15' },
+                        { id: 2, nombre: 'María', placas: 'Snt1069', 'Hora Entrada': '10:30', 'Hora Salida': '11:30', 'Costo': '$30' },
                     ],
                     2: [
-                        { id: 3, nombre: 'Carlos', placas: 'Snt1070', 'Hora Entrada': '09:00', 'Hora Salida': '10:00', 'Costo': '$10' },
-                        { id: 4, nombre: 'Ana', placas: 'Snt1071', 'Hora Entrada': '09:15', 'Hora Salida': '10:15', 'Costo': '$10' },
+                        { id: 3, nombre: 'Carlos', placas: 'Snt1070', 'Hora Entrada': '09:00', 'Hora Salida': '10:00', 'Costo': '$15' },
+                        { id: 4, nombre: 'Ana', placas: 'Snt1071', 'Hora Entrada': '09:15', 'Hora Salida': '10:15', 'Costo': '$15' },
                     ],
                 }
 
                 setDetalles(detallesData[registroId] || [])
                 setCargando(false)
-            }, 500) // Espera 500ms para simular que está trayendo datos
+            }, 500)
         }
     }, [isOpen, registroId])
 
     if (!isOpen) return null
 
+    const totalIngresos = detalles.reduce((sum, row) => {
+        const costo = parseFloat(row.Costo.replace('$', ''))
+        return sum + costo
+    }, 0)
+
     return (
         <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50"
             onClick={onClose}
         >
             <div
@@ -85,9 +90,10 @@ export default function DetallesRegistroModal({
                 </div>
 
                 <div className="bg-gray-100 p-4 flex justify-end">
+                    <p className='pr-10'>Total de ingresos: <span><b>${totalIngresos.toFixed(2)}</b></span></p>
                     <button
                         onClick={onClose}
-                        className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+                        className="bg-green-800 text-white px-4 py-2 rounded"
                     >
                         Cerrar
                     </button>

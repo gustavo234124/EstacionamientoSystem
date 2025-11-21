@@ -18,7 +18,7 @@ export default function RegisterTable() {
     return (
         <>
             <div className="overflow-x-auto">
-                <table className="w-full border-collapse border border-gray-300">
+                <table className="w-250 border-collapse border border-gray-300">
                     <thead className="bg-gray-600 text-white">
                         <tr>
                             <th className="border p-3 text-left">ID</th>
