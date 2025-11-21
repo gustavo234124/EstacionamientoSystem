@@ -1,3 +1,5 @@
+import React from 'react';
+import Link from 'next/link'
 import {
     useReactTable,
     getCoreRowModel,
@@ -18,6 +20,14 @@ export default function RegisterTable() {
         {
             accessorKey: 'acciones',
             header: 'Acciones',
+            cell: (info) => (
+                <Link
+                    href={`/detalles/${info.row.original.id}`}
+                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                >
+                    Ver más
+                </Link>
+            ),
         },
     ]
 
