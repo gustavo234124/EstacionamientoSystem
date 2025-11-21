@@ -12,30 +12,18 @@ export default function RegisterTable() {
             header: 'ID',
         },
         {
-            accessorKey: 'nombre',
-            header: 'Nombre',
+            accessorKey: 'fecha',
+            header: 'Fecha',
         },
         {
-            accessorKey: 'placas',
-            header: 'placas',
-        },
-        {
-            accessorKey: 'Hora Entrada',
-            header: 'Hora Entrada',
-        },
-        {
-            accessorKey: 'Hora Salida',
-            header: 'Hora Salida',
-        },
-        {
-            accessorKey: 'Costo',
-            header: 'Costo',
+            accessorKey: 'acciones',
+            header: 'Acciones',
         },
     ]
 
     const data = [
-        { id: 1, nombre: 'Juan', placas: 'Snt1068', 'Hora Entrada': '10:00', 'Hora Salida': '11:00', 'Costo': '$10' },
-        { id: 2, nombre: 'María', placas: 'Snt1068', 'Hora Entrada': '10:00', 'Hora Salida': '11:00', 'Costo': '$10' },
+        { id: 1, fecha: '18-11-2025', acciones: 'Ver mas' },
+        { id: 2, fecha: '25-11-2025', acciones: 'Ver mas' },
     ]
 
 
