@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-table'
 
 export default function RegisterTable() {
-    // Define tus columnas
+
     const columns = [
         {
             accessorKey: 'id',
@@ -16,18 +16,29 @@ export default function RegisterTable() {
             header: 'Nombre',
         },
         {
-            accessorKey: 'email',
-            header: 'Email',
+            accessorKey: 'placas',
+            header: 'placas',
+        },
+        {
+            accessorKey: 'Hora Entrada',
+            header: 'Hora Entrada',
+        },
+        {
+            accessorKey: 'Hora Salida',
+            header: 'Hora Salida',
+        },
+        {
+            accessorKey: 'Costo',
+            header: 'Costo',
         },
     ]
 
-    // Tus datos
     const data = [
-        { id: 1, nombre: 'Juan', email: 'juan@example.com' },
-        { id: 2, nombre: 'María', email: 'maria@example.com' },
+        { id: 1, nombre: 'Juan', placas: 'Snt1068', 'Hora Entrada': '10:00', 'Hora Salida': '11:00', 'Costo': '$10' },
+        { id: 2, nombre: 'María', placas: 'Snt1068', 'Hora Entrada': '10:00', 'Hora Salida': '11:00', 'Costo': '$10' },
     ]
 
-    // Crea la tabla
+
     const table = useReactTable({
         data,
         columns,
