@@ -1,16 +1,15 @@
-import { sql } from '@vercel/postgres';
+import { db } from '@vercel/postgres';
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
         const { id, precio } = req.body;
 
         try {
-            const result = await sql`
-        UPDATE registros 
-        SET salida = NOW(), precio = ${precio}
-        WHERE id = ${id}
-        RETURNING *
-      `;
+            const client = await db.connect();
+            const result = await client.query(
+                'UPDATE registros SET salida = NOW(), precio = $1 WHERE id = $2 RETURNING *',
+                [precio, id]
+            );
 
             res.status(200).json(result.rows[0]);
         } catch (error) {
