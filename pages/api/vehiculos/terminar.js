@@ -1,17 +1,19 @@
-import { db } from '@vercel/postgres';
+import { neon } from '@neondatabase/serverless';
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
         const { id, precio } = req.body;
 
         try {
-            const client = await db.connect();
-            const result = await client.query(
-                'UPDATE registros SET salida = NOW(), precio = $1 WHERE id = $2 RETURNING *',
-                [precio, id]
-            );
+            const sql = neon(process.env.POSTGRES_URL);
+            const result = await sql`
+                UPDATE registros 
+                SET salida = NOW(), precio = ${precio} 
+                WHERE id = ${id} 
+                RETURNING *
+            `;
 
-            res.status(200).json(result.rows[0]);
+            res.status(200).json(result[0]);
         } catch (error) {
             console.error('Error:', error);
             res.status(500).json({ error: error.message });

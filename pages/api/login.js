@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Usuario y contraseña requeridos' });
     }
 
-    const sql = neon(process.env.DATABASE_URL);
+    const sql = neon(process.env.POSTGRES_URL);
 
     // Buscar usuario
     const usuarios = await sql`
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     }
 
     // Login exitoso
-    res.status(200).json({ 
+    res.status(200).json({
       success: true,
       message: 'Login exitoso',
       usuario: usuario.nombre_usuario

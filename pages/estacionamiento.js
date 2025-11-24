@@ -32,10 +32,18 @@ export default function Estacionamiento() {
       const response = await fetch('/api/vehiculos/activos');
       const data = await response.json();
 
-      // Agregar color aleatorio a cada vehículo
+
+      if (!Array.isArray(data)) {
+        console.error('Data no es un array:', data);
+        setVehiculos([]);
+        setCargando(false);
+        return;
+      }
+
+      // Agregar color aleatorio a cada vehículo y convertir fecha correctamente
       const vehiculosConColor = data.map(v => ({
         ...v,
-        horaEntrada: v.entrada, // Mapear 'entrada' de BD a 'horaEntrada' del componente
+        horaEntrada: new Date(v.entrada).toISOString(), // Convertir a ISO string
         color: colores[Math.floor(Math.random() * colores.length)]
       }));
 
@@ -43,6 +51,7 @@ export default function Estacionamiento() {
       setCargando(false);
     } catch (error) {
       console.error('Error al cargar vehículos:', error);
+      setVehiculos([]);
       setCargando(false);
     }
   };
