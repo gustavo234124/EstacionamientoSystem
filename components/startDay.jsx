@@ -1,11 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AddOperation from './addOperation.jsx';
 import EndDay from './endDay.jsx';
 import CountPrice from './countPrice.jsx';
 
 export default function StartDay({ agregarVehiculo }) {
+  // Iniciar siempre en false para evitar hydration error
   const [diaIniciado, setDiaIniciado] = useState(false);
   const [modalEndDay, setModalEndDay] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Cargar desde localStorage DESPUÉS de montar el componente
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem('diaIniciado');
+    if (saved === 'true') {
+      setDiaIniciado(true);
+    }
+  }, []);
+
+  // Guardar en localStorage cada vez que cambie
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('diaIniciado', diaIniciado);
+    }
+  }, [diaIniciado, mounted]);
 
   const handleConfirmarTerminar = () => {
     setModalEndDay(false);
