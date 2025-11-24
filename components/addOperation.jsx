@@ -15,21 +15,41 @@ export default function AddOperation({ agregarVehiculo }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    agregarVehiculo(formData);
-    // Limpiar formulario
-    setFormData({
-      nombre: '',
-      placas: '',
-      observaciones: ''
-    });
-    setModalOpen(false);
+
+    try {
+      const response = await fetch('/api/vehiculos/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        agregarVehiculo(data);
+        setFormData({
+          nombre: '',
+          placas: '',
+          observaciones: ''
+        });
+        setModalOpen(false);
+      } else {
+        console.error('Error al crear vehículo:', data.error);
+        alert('Error al agregar el vehículo');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error de conexión');
+    }
   };
 
   return (
     <>
-      <button 
+      <button
         onClick={() => setModalOpen(true)}
         className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
       >
@@ -38,17 +58,17 @@ export default function AddOperation({ agregarVehiculo }) {
 
       {modalOpen && (
         <>
-          <div 
+          <div
             onClick={() => setModalOpen(false)}
             className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center"
           >
-            <div 
+            <div
               onClick={(e) => e.stopPropagation()}
               className="bg-white rounded-2xl p-8 shadow-2xl max-w-md w-full mx-4"
             >
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-gray-800">Agregar Vehículo</h2>
-                <button 
+                <button
                   onClick={() => setModalOpen(false)}
                   className="text-gray-500 hover:text-gray-700 text-2xl"
                 >
@@ -61,7 +81,7 @@ export default function AddOperation({ agregarVehiculo }) {
                   <label className="block text-sm font-bold text-gray-700 mb-2">
                     Nombre
                   </label>
-                  <input 
+                  <input
                     type="text"
                     name="nombre"
                     value={formData.nombre}
@@ -76,7 +96,7 @@ export default function AddOperation({ agregarVehiculo }) {
                   <label className="block text-sm font-bold text-gray-700 mb-2">
                     Placas
                   </label>
-                  <input 
+                  <input
                     type="text"
                     name="placas"
                     value={formData.placas}
@@ -102,14 +122,14 @@ export default function AddOperation({ agregarVehiculo }) {
                 </div>
 
                 <div className="flex gap-3 pt-4">
-                  <button 
+                  <button
                     type="button"
                     onClick={() => setModalOpen(false)}
                     className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700"
                   >
                     Cancelar
                   </button>
-                  <button 
+                  <button
                     type="submit"
                     className="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
                   >
