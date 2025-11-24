@@ -4,32 +4,43 @@ export default function VehicleCard({ vehiculo, onTerminar }) {
   const [tiempoTranscurrido, setTiempoTranscurrido] = useState({ horas: 0, minutos: 0 });
 
   useEffect(() => {
+    // Parsear la fecha SIN ajustar zona horaria
+    const entrada = new Date(vehiculo.horaEntrada);
+
+    console.log('Hora entrada:', entrada); // Debug
+    console.log('Hora actual:', new Date()); // Debug
+
     const intervalo = setInterval(() => {
       const ahora = new Date();
-      const entrada = new Date(vehiculo.horaEntrada);
       const diferencia = ahora - entrada;
-      
+
+
+      if (diferencia < 0) {
+        setTiempoTranscurrido({ horas: 0, minutos: 0 });
+        return;
+      }
+
       const horas = Math.floor(diferencia / (1000 * 60 * 60));
       const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
 
-      setTiempoTranscurrido({ horas, minutos});
+      setTiempoTranscurrido({ horas, minutos });
     }, 1000);
 
     return () => clearInterval(intervalo);
-  }, [vehiculo.horaEntrada]);
+  }, [vehiculo.id]);
 
   const formatearHora = (fecha) => {
     const date = new Date(fecha);
-    return date.toLocaleTimeString('es-MX', { 
-      hour: '2-digit', 
+    return date.toLocaleTimeString('es-MX', {
+      hour: '2-digit',
       minute: '2-digit',
-      hour12: true 
+      hour12: true
     });
   };
 
   return (
-<div className={`bg-gradient-to-br ${vehiculo.color} rounded-2xl p-6 shadow-lg text-white`}>     
-   {/* Nombre */}
+    <div className={`bg-gradient-to-br ${vehiculo.color} rounded-2xl p-6 shadow-lg text-white`}>
+      {/* Nombre */}
       <div className="mb-3">
         <p className="text-sm font-semibold opacity-90">Nombre</p>
         <p className="text-xl font-bold">{vehiculo.nombre}</p>
@@ -70,13 +81,13 @@ export default function VehicleCard({ vehiculo, onTerminar }) {
         </div>
       )}
 
-{/* Botón Terminar */}
-<button
-  onClick={() => onTerminar(vehiculo)}  // ← Pasa todo el vehículo
-  className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-colors"
->
-  Terminar
-</button>
+      {/* Botón Terminar */}
+      <button
+        onClick={() => onTerminar(vehiculo)}
+        className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition-colors"
+      >
+        Terminar
+      </button>
     </div>
   );
 }

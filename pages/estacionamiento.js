@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navmenu from '../components/navmenu.jsx';
 import StartDay from '../components/startDay.jsx';
 import VehicleCard from '../components/vehicleCard.jsx';
-import EndVehicle from '../components/endVehicle.jsx'; // ← Componente corregido
+import EndVehicle from '../components/endVehicle.jsx';
 
 export default function Estacionamiento() {
   const [vehiculos, setVehiculos] = useState([]);
   const [modalTerminar, setModalTerminar] = useState(false);
   const [vehiculoSeleccionado, setVehiculoSeleccionado] = useState(null);
+  const [cargando, setCargando] = useState(true);
 
   const colores = [
     'from-orange-400 to-orange-600',
@@ -21,12 +22,46 @@ export default function Estacionamiento() {
     'from-teal-400 to-teal-600',
   ];
 
+  // Traer vehículos activos al cargar la página
+  useEffect(() => {
+    cargarVehiculos();
+  }, []);
+
+  const cargarVehiculos = async () => {
+    try {
+      const response = await fetch('/api/vehiculos/activos');
+      const data = await response.json();
+
+
+      if (!Array.isArray(data)) {
+        console.error('Data no es un array:', data);
+        setVehiculos([]);
+        setCargando(false);
+        return;
+      }
+
+      // Agregar color aleatorio a cada vehículo y convertir fecha correctamente
+      const vehiculosConColor = data.map(v => ({
+        ...v,
+        horaEntrada: new Date(v.entrada).toISOString(), // Convertir a ISO string
+        color: colores[Math.floor(Math.random() * colores.length)]
+      }));
+
+      setVehiculos(vehiculosConColor);
+      setCargando(false);
+    } catch (error) {
+      console.error('Error al cargar vehículos:', error);
+      setVehiculos([]);
+      setCargando(false);
+    }
+  };
+
+  // Agregar vehículo (ya viene de la BD con ID)
   const agregarVehiculo = (nuevoVehiculo) => {
     const colorAleatorio = colores[Math.floor(Math.random() * colores.length)];
     const vehiculo = {
-      id: Date.now(),
       ...nuevoVehiculo,
-      horaEntrada: new Date().toISOString(),
+      horaEntrada: nuevoVehiculo.entrada, // Mapear 'entrada' de BD a 'horaEntrada'
       color: colorAleatorio,
     };
     setVehiculos([...vehiculos, vehiculo]);
@@ -38,17 +73,39 @@ export default function Estacionamiento() {
     setModalTerminar(true);
   };
 
-  // Confirmar terminación
-  const confirmarTerminar = (precio) => {
-    // Aquí guardarías en BD el registro completo con precio
-    console.log('Terminando vehículo:', vehiculoSeleccionado, 'Precio:', precio);
+  // Confirmar terminación y actualizar BD
+  const confirmarTerminar = async (precio) => {
+    try {
+      const response = await fetch('/api/vehiculos/terminar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: vehiculoSeleccionado.id,
+          precio: precio
+        })
+      });
 
-    // Eliminar del tablero
-    setVehiculos(vehiculos.filter(v => v.id !== vehiculoSeleccionado.id));
+      const data = await response.json();
 
-    // Cerrar modal
-    setModalTerminar(false);
-    setVehiculoSeleccionado(null);
+      if (response.ok) {
+        console.log('Vehículo terminado:', data);
+
+        // Eliminar del tablero
+        setVehiculos(vehiculos.filter(v => v.id !== vehiculoSeleccionado.id));
+
+        // Cerrar modal
+        setModalTerminar(false);
+        setVehiculoSeleccionado(null);
+      } else {
+        console.error('Error al terminar:', data.error);
+        alert('Error al terminar el vehículo');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error de conexión');
+    }
   };
 
   return (
@@ -58,20 +115,28 @@ export default function Estacionamiento() {
       <div className="md:ml-64 p-4 pt-24">
         <StartDay agregarVehiculo={agregarVehiculo} />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-20">
-          {vehiculos.map(vehiculo => (
-            <VehicleCard
-              key={vehiculo.id}
-              vehiculo={vehiculo}
-              onTerminar={abrirModalTerminar}  // ← Abre modal
-            />
-          ))}
-        </div>
-
-        {vehiculos.length === 0 && (
+        {cargando ? (
           <div className="text-center text-gray-600 mt-20">
-            <p className="text-2xl font-bold mb-2">No hay vehículos registrados</p>
+            <p className="text-2xl font-bold">Cargando vehículos...</p>
           </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-20">
+              {vehiculos.map(vehiculo => (
+                <VehicleCard
+                  key={vehiculo.id}
+                  vehiculo={vehiculo}
+                  onTerminar={abrirModalTerminar}
+                />
+              ))}
+            </div>
+
+            {vehiculos.length === 0 && (
+              <div className="text-center text-gray-600 mt-20">
+                <p className="text-2xl font-bold mb-2">No hay vehículos registrados</p>
+              </div>
+            )}
+          </>
         )}
       </div>
 

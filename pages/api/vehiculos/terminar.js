@@ -2,13 +2,14 @@ import { neon } from '@neondatabase/serverless';
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
-        const { nombre, placas, observaciones } = req.body;
+        const { id, precio } = req.body;
 
         try {
             const sql = neon(process.env.POSTGRES_URL);
             const result = await sql`
-                INSERT INTO registros (nombre, placas, observaciones, entrada) 
-                VALUES (${nombre}, ${placas}, ${observaciones || null}, NOW()) 
+                UPDATE registros 
+                SET salida = NOW(), precio = ${precio} 
+                WHERE id = ${id} 
                 RETURNING *
             `;
 
