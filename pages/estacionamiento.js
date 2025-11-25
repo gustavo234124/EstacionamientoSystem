@@ -9,6 +9,8 @@ export default function Estacionamiento() {
   const [modalTerminar, setModalTerminar] = useState(false);
   const [vehiculoSeleccionado, setVehiculoSeleccionado] = useState(null);
   const [cargando, setCargando] = useState(true);
+  const [totalRecaudado, setTotalRecaudado] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   const colores = [
     'from-orange-400 to-orange-600',
@@ -22,10 +24,45 @@ export default function Estacionamiento() {
     'from-teal-400 to-teal-600',
   ];
 
-  // Traer vehículos activos al cargar la página
+  // Marcar como montado
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Traer vehículos activos y total al cargar la página
   useEffect(() => {
     cargarVehiculos();
-  }, []);
+    if (mounted) {
+      cargarTotal();
+    }
+  }, [mounted]);
+
+  const cargarTotal = async () => {
+    try {
+      // Solo acceder a localStorage en el cliente
+      if (typeof window === 'undefined') {
+        setTotalRecaudado(0);
+        return;
+      }
+
+      const horaInicio = localStorage.getItem('horaInicioDia');
+
+      // Si no hay horaInicio, significa que no se ha iniciado el día
+      if (!horaInicio) {
+        setTotalRecaudado(0);
+        return;
+      }
+
+      const url = `/api/vehiculos/total-dia?horaInicio=${encodeURIComponent(horaInicio)}`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+      setTotalRecaudado(data.total || 0);
+    } catch (error) {
+      console.error('Error al cargar total:', error);
+      setTotalRecaudado(0);
+    }
+  };
 
   const cargarVehiculos = async () => {
     try {
@@ -95,6 +132,9 @@ export default function Estacionamiento() {
         // Eliminar del tablero
         setVehiculos(vehiculos.filter(v => v.id !== vehiculoSeleccionado.id));
 
+        // Actualizar total recaudado
+        cargarTotal();
+
         // Cerrar modal
         setModalTerminar(false);
         setVehiculoSeleccionado(null);
@@ -113,7 +153,11 @@ export default function Estacionamiento() {
       <Navmenu />
 
       <div className="md:ml-64 p-4 pt-24">
-        <StartDay agregarVehiculo={agregarVehiculo} />
+        <StartDay
+          agregarVehiculo={agregarVehiculo}
+          vehiculosActivos={vehiculos.length}
+          totalRecaudado={totalRecaudado}
+        />
 
         {cargando ? (
           <div className="text-center text-gray-600 mt-20">
