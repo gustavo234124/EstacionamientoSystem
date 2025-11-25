@@ -1,11 +1,11 @@
 import React from 'react';
 
-export default function CountPrice() {
+export default function CountPrice({ totalRecaudado }) {
     return (
-
         <>
-            <span className="text-2xl font-bold text-gray-800">$0</span>
+            <span className="text-2xl font-bold text-gray-800">
+                ${totalRecaudado?.toFixed(2) || '0.00'}
+            </span>
         </>
-
     )
 }

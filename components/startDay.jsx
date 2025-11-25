@@ -3,7 +3,7 @@ import AddOperation from './addOperation.jsx';
 import EndDay from './endDay.jsx';
 import CountPrice from './countPrice.jsx';
 
-export default function StartDay({ agregarVehiculo, vehiculosActivos }) {
+export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecaudado }) {
   // Iniciar siempre en false para evitar hydration error
   const [diaIniciado, setDiaIniciado] = useState(false);
   const [modalEndDay, setModalEndDay] = useState(false);
@@ -60,7 +60,7 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos }) {
 
           <AddOperation agregarVehiculo={agregarVehiculo} />
 
-          <CountPrice />
+          <CountPrice totalRecaudado={totalRecaudado} />
 
         </div>
       )}
