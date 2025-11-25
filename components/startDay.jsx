@@ -26,6 +26,13 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecau
     }
   }, [diaIniciado, mounted]);
 
+  const handleComenzarDia = () => {
+    // Guardar la hora de inicio del día
+    const ahora = new Date().toISOString();
+    localStorage.setItem('horaInicioDia', ahora);
+    setDiaIniciado(true);
+  };
+
   const handleClickTerminarDia = () => {
     // Si hay vehículos activos, mostrar advertencia
     if (vehiculosActivos > 0) {
@@ -36,6 +43,8 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecau
   };
 
   const handleConfirmarTerminar = () => {
+    // Limpiar la hora de inicio al terminar el día
+    localStorage.removeItem('horaInicioDia');
     setModalEndDay(false);
     setDiaIniciado(false);
   };
@@ -44,7 +53,7 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecau
     <>
       {!diaIniciado ? (
         <button
-          onClick={() => setDiaIniciado(true)}
+          onClick={handleComenzarDia}
           className="bg-red-700 text-white p-3 rounded-2xl absolute top-3 left-20 md:top-4 md:left-80"
         >
           Comenzar Día
