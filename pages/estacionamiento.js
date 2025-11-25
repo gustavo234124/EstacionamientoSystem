@@ -10,6 +10,7 @@ export default function Estacionamiento() {
   const [vehiculoSeleccionado, setVehiculoSeleccionado] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [totalRecaudado, setTotalRecaudado] = useState(0);
+  const [vehiculosAtendidos, setVehiculosAtendidos] = useState(0);
   const [mounted, setMounted] = useState(false);
 
   const colores = [
@@ -24,22 +25,20 @@ export default function Estacionamiento() {
     'from-teal-400 to-teal-600',
   ];
 
-  // Marcar como montado
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Traer vehículos activos y total al cargar la página
   useEffect(() => {
     cargarVehiculos();
     if (mounted) {
       cargarTotal();
+      cargarVehiculosAtendidos();
     }
   }, [mounted]);
 
   const cargarTotal = async () => {
     try {
-      // Solo acceder a localStorage en el cliente
       if (typeof window === 'undefined') {
         setTotalRecaudado(0);
         return;
@@ -47,7 +46,6 @@ export default function Estacionamiento() {
 
       const horaInicio = localStorage.getItem('horaInicioDia');
 
-      // Si no hay horaInicio, significa que no se ha iniciado el día
       if (!horaInicio) {
         setTotalRecaudado(0);
         return;
@@ -64,6 +62,31 @@ export default function Estacionamiento() {
     }
   };
 
+  const cargarVehiculosAtendidos = async () => {
+    try {
+      if (typeof window === 'undefined') {
+        setVehiculosAtendidos(0);
+        return;
+      }
+
+      const horaInicio = localStorage.getItem('horaInicioDia');
+
+      if (!horaInicio) {
+        setVehiculosAtendidos(0);
+        return;
+      }
+
+      const url = `/api/vehiculos/vehiculos-atendidos?horaInicio=${encodeURIComponent(horaInicio)}`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+      setVehiculosAtendidos(data.cantidad || 0);
+    } catch (error) {
+      console.error('Error al cargar vehículos atendidos:', error);
+      setVehiculosAtendidos(0);
+    }
+  };
+
   const cargarVehiculos = async () => {
     try {
       const response = await fetch('/api/vehiculos/activos');
@@ -77,10 +100,10 @@ export default function Estacionamiento() {
         return;
       }
 
-      // Agregar color aleatorio a cada vehículo y convertir fecha correctamente
+
       const vehiculosConColor = data.map(v => ({
         ...v,
-        horaEntrada: new Date(v.entrada).toISOString(), // Convertir a ISO string
+        horaEntrada: new Date(v.entrada).toISOString(),
         color: colores[Math.floor(Math.random() * colores.length)]
       }));
 
@@ -93,24 +116,24 @@ export default function Estacionamiento() {
     }
   };
 
-  // Agregar vehículo (ya viene de la BD con ID)
+
   const agregarVehiculo = (nuevoVehiculo) => {
     const colorAleatorio = colores[Math.floor(Math.random() * colores.length)];
     const vehiculo = {
       ...nuevoVehiculo,
-      horaEntrada: nuevoVehiculo.entrada, // Mapear 'entrada' de BD a 'horaEntrada'
+      horaEntrada: nuevoVehiculo.entrada,
       color: colorAleatorio,
     };
     setVehiculos([...vehiculos, vehiculo]);
   };
 
-  // Abrir modal para terminar
+
   const abrirModalTerminar = (vehiculo) => {
     setVehiculoSeleccionado(vehiculo);
     setModalTerminar(true);
   };
 
-  // Confirmar terminación y actualizar BD
+
   const confirmarTerminar = async (precio) => {
     try {
       const response = await fetch('/api/vehiculos/terminar', {
@@ -129,13 +152,14 @@ export default function Estacionamiento() {
       if (response.ok) {
         console.log('Vehículo terminado:', data);
 
-        // Eliminar del tablero
+
         setVehiculos(vehiculos.filter(v => v.id !== vehiculoSeleccionado.id));
 
-        // Actualizar total recaudado
-        cargarTotal();
 
-        // Cerrar modal
+        cargarTotal();
+        cargarVehiculosAtendidos();
+
+
         setModalTerminar(false);
         setVehiculoSeleccionado(null);
       } else {
@@ -157,6 +181,7 @@ export default function Estacionamiento() {
           agregarVehiculo={agregarVehiculo}
           vehiculosActivos={vehiculos.length}
           totalRecaudado={totalRecaudado}
+          vehiculosAtendidos={vehiculosAtendidos}
         />
 
         {cargando ? (

@@ -3,14 +3,12 @@ import AddOperation from './addOperation.jsx';
 import EndDay from './endDay.jsx';
 import CountPrice from './countPrice.jsx';
 
-export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecaudado }) {
-  // Iniciar siempre en false para evitar hydration error
+export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecaudado, vehiculosAtendidos }) {
   const [diaIniciado, setDiaIniciado] = useState(false);
   const [modalEndDay, setModalEndDay] = useState(false);
   const [modalAdvertencia, setModalAdvertencia] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // Cargar desde localStorage DESPUÉS de montar el componente
   useEffect(() => {
     setMounted(true);
     const saved = localStorage.getItem('diaIniciado');
@@ -19,7 +17,6 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecau
     }
   }, []);
 
-  // Guardar en localStorage cada vez que cambie
   useEffect(() => {
     if (mounted) {
       localStorage.setItem('diaIniciado', diaIniciado);
@@ -27,9 +24,8 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecau
   }, [diaIniciado, mounted]);
 
   const handleComenzarDia = () => {
-    // Guardar la hora de inicio del día con el mismo formato que usamos en salida
     const ahora = new Date();
-    const offset = -6 * 60; // UTC-6 en minutos
+    const offset = -6 * 60;
     const localTime = new Date(ahora.getTime() + offset * 60 * 1000);
     const ahoraLocal = localTime.toISOString().replace('Z', '-06:00');
 
@@ -38,7 +34,7 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecau
   };
 
   const handleClickTerminarDia = () => {
-    // Si hay vehículos activos, mostrar advertencia
+
     if (vehiculosActivos > 0) {
       setModalAdvertencia(true);
     } else {
@@ -47,7 +43,6 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecau
   };
 
   const handleConfirmarTerminar = () => {
-    // Limpiar la hora de inicio al terminar el día
     localStorage.removeItem('horaInicioDia');
     setModalEndDay(false);
     setDiaIniciado(false);
@@ -115,8 +110,8 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecau
         isOpen={modalEndDay}
         onClose={() => setModalEndDay(false)}
         onConfirm={handleConfirmarTerminar}
-        totalRecaudado={0}
-        vehiculosAtendidos={0}
+        totalRecaudado={totalRecaudado}
+        vehiculosAtendidos={vehiculosAtendidos}
       />
     </>
   );
