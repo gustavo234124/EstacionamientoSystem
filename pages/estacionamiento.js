@@ -113,7 +113,7 @@ export default function Estacionamiento() {
       <Navmenu />
 
       <div className="md:ml-64 p-4 pt-24">
-        <StartDay agregarVehiculo={agregarVehiculo} />
+        <StartDay agregarVehiculo={agregarVehiculo} vehiculosActivos={vehiculos.length} />
 
         {cargando ? (
           <div className="text-center text-gray-600 mt-20">
