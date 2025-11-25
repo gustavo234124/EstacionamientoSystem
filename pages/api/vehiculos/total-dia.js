@@ -9,26 +9,30 @@ export default async function handler(req, res) {
             let result;
 
             if (horaInicio) {
-                // Obtener el total desde la hora de inicio del día
+                // USAR TIMESTAMPTZ para comparar peras con peras (fechas con zona horaria)
+                // Asumimos que 'salida' está guardada como TIMESTAMP (hora local) y la convertimos a TIMESTAMPTZ
                 result = await sql`
-                    SELECT COALESCE(SUM(precio), 0) as total
+                    SELECT 
+                        COALESCE(SUM(precio), 0) as total,
+                        COUNT(*) as cantidad
                     FROM registros 
-                    WHERE salida >= ${horaInicio}
-                    AND salida IS NOT NULL
+                    WHERE salida IS NOT NULL
+                    AND (salida::timestamp AT TIME ZONE 'America/Mexico_City') >= ${horaInicio}::timestamptz
                 `;
             } else {
-                // Obtener el total del día actual (fallback)
+                // Fallback: Total del día actual (usando fecha del servidor)
                 result = await sql`
                     SELECT COALESCE(SUM(precio), 0) as total
                     FROM registros 
-                    WHERE DATE(salida) = CURRENT_DATE
+                    WHERE DATE(salida AT TIME ZONE 'America/Mexico_City') = CURRENT_DATE
                     AND salida IS NOT NULL
                 `;
             }
 
-            res.status(200).json({ total: parseFloat(result[0].total) });
+            const total = parseFloat(result[0].total);
+            res.status(200).json({ total });
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error en total-dia:', error);
             res.status(500).json({ error: error.message });
         }
     } else {

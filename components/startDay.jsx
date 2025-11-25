@@ -27,9 +27,13 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecau
   }, [diaIniciado, mounted]);
 
   const handleComenzarDia = () => {
-    // Guardar la hora de inicio del día
-    const ahora = new Date().toISOString();
-    localStorage.setItem('horaInicioDia', ahora);
+    // Guardar la hora de inicio del día con el mismo formato que usamos en salida
+    const ahora = new Date();
+    const offset = -6 * 60; // UTC-6 en minutos
+    const localTime = new Date(ahora.getTime() + offset * 60 * 1000);
+    const ahoraLocal = localTime.toISOString().replace('Z', '-06:00');
+
+    localStorage.setItem('horaInicioDia', ahoraLocal);
     setDiaIniciado(true);
   };
 
