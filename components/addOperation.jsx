@@ -30,7 +30,28 @@ export default function AddOperation({ agregarVehiculo }) {
       const data = await response.json();
 
       if (response.ok) {
-        agregarVehiculo(data);
+        // Generar color aleatorio
+        const colores = [
+          'from-orange-400 to-orange-600',
+          'from-blue-400 to-blue-600',
+          'from-purple-400 to-purple-600',
+          'from-green-400 to-green-600',
+          'from-red-400 to-red-600',
+          'from-pink-400 to-pink-600',
+          'from-yellow-400 to-yellow-600',
+          'from-indigo-400 to-indigo-600',
+          'from-teal-400 to-teal-600',
+        ];
+        const colorAleatorio = colores[Math.floor(Math.random() * colores.length)];
+
+        // Guardar color en localStorage usando el ID del vehículo
+        const coloresGuardados = JSON.parse(localStorage.getItem('vehiculosColores') || '{}');
+        coloresGuardados[data.id] = colorAleatorio;
+        localStorage.setItem('vehiculosColores', JSON.stringify(coloresGuardados));
+
+        // Agregar color al vehículo antes de pasarlo
+        agregarVehiculo({ ...data, color: colorAleatorio });
+
         setFormData({
           nombre: '',
           placas: '',

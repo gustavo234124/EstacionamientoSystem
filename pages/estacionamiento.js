@@ -100,12 +100,23 @@ export default function Estacionamiento() {
         return;
       }
 
+      // Cargar colores desde localStorage
+      const coloresGuardados = JSON.parse(localStorage.getItem('vehiculosColores') || '{}');
 
       const vehiculosConColor = data.map(v => ({
         ...v,
         horaEntrada: new Date(v.entrada).toISOString(),
-        color: colores[Math.floor(Math.random() * colores.length)]
+        color: coloresGuardados[v.id] || colores[Math.floor(Math.random() * colores.length)]
       }));
+
+      // Guardar colores nuevos en localStorage
+      const nuevosColores = { ...coloresGuardados };
+      vehiculosConColor.forEach(v => {
+        if (!nuevosColores[v.id]) {
+          nuevosColores[v.id] = v.color;
+        }
+      });
+      localStorage.setItem('vehiculosColores', JSON.stringify(nuevosColores));
 
       setVehiculos(vehiculosConColor);
       setCargando(false);
@@ -118,11 +129,10 @@ export default function Estacionamiento() {
 
 
   const agregarVehiculo = (nuevoVehiculo) => {
-    const colorAleatorio = colores[Math.floor(Math.random() * colores.length)];
     const vehiculo = {
       ...nuevoVehiculo,
       horaEntrada: nuevoVehiculo.entrada,
-      color: colorAleatorio,
+      color: nuevoVehiculo.color || colores[Math.floor(Math.random() * colores.length)],
     };
     setVehiculos([...vehiculos, vehiculo]);
   };

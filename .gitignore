@@ -1,41 +1,38 @@
-# Node dependencies
-node_modules/
-.pnpm-store/
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 
-# Next.js build output
-.next/
-out/
+# testing
+/coverage
 
-# Local env files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# next.js
+/.next/
+/out/
 
-# Logs
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 
-# OS files
-.DS_Store
-Thumbs.db
+# local env files
+.env*.local
+.env.local
+.env
 
-# IDE / Editor
-.vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
+# vercel
+.vercel
 
-# Optional: Tailwind cache
-.tailwind.cache/
+# typescript
+*.tsbuildinfo
+next-env.d.ts
 
-# Optional: coverage reports
-coverage/
+# package manager
+package-lock.json

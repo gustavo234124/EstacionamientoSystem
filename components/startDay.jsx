@@ -42,10 +42,44 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecau
     }
   };
 
-  const handleConfirmarTerminar = () => {
-    localStorage.removeItem('horaInicioDia');
-    setModalEndDay(false);
-    setDiaIniciado(false);
+  const handleConfirmarTerminar = async () => {
+    try {
+      // Obtener hora de inicio del día desde localStorage
+      const horaInicio = localStorage.getItem('horaInicioDia');
+      const horaFin = new Date();
+      const offset = -6 * 60;
+      const localTime = new Date(horaFin.getTime() + offset * 60 * 1000);
+      const horaFinLocal = localTime.toISOString().replace('Z', '-06:00');
+
+      // Obtener la fecha (solo la parte de fecha)
+      const fecha = horaFinLocal.split('T')[0];
+
+      // Guardar el registro del día
+      await fetch('/api/dias/guardar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fecha,
+          horaInicio,
+          horaFin: horaFinLocal,
+          totalRecaudado,
+          vehiculosAtendidos
+        })
+      });
+
+      // Limpiar localStorage
+      localStorage.removeItem('horaInicioDia');
+      setModalEndDay(false);
+      setDiaIniciado(false);
+    } catch (error) {
+      console.error('Error al guardar día:', error);
+      // Aún así cerrar el día
+      localStorage.removeItem('horaInicioDia');
+      setModalEndDay(false);
+      setDiaIniciado(false);
+    }
   };
 
   return (

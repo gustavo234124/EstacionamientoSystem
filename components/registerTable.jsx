@@ -1,18 +1,64 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import DetallesRegistroModal from './DetailsRegisterModal'
 
 export default function RegisterTable() {
     const [modalAbierto, setModalAbierto] = useState(false)
     const [registroSeleccionado, setRegistroSeleccionado] = useState(null)
+    const [dias, setDias] = useState([])
+    const [cargando, setCargando] = useState(true)
 
-    const data = [
-        { id: 1, fecha: '18-11-2025' },
-        { id: 2, fecha: '25-11-2025' },
-    ]
+    useEffect(() => {
+        cargarDias()
+    }, [])
+
+    const cargarDias = async () => {
+        try {
+            const response = await fetch('/api/dias/todos')
+            const data = await response.json()
+
+            // Validar que data sea un array
+            if (!Array.isArray(data)) {
+                console.error('La respuesta no es un array:', data)
+                setDias([])
+                setCargando(false)
+                return
+            }
+
+            // Formatear los datos
+            const diasFormateados = data.map(dia => {
+                const fecha = new Date(dia.fecha).toLocaleDateString('es-MX')
+                const horaInicio = new Date(dia.hora_inicio).toLocaleTimeString('es-MX', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+                const horaFin = new Date(dia.hora_fin).toLocaleTimeString('es-MX', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+
+                return {
+                    ...dia,
+                    fecha,
+                    horario: `${horaInicio} - ${horaFin}`
+                }
+            })
+
+            setDias(diasFormateados)
+            setCargando(false)
+        } catch (error) {
+            console.error('Error al cargar días:', error)
+            setDias([])
+            setCargando(false)
+        }
+    }
 
     const handleVerMas = (row) => {
         setRegistroSeleccionado(row)
         setModalAbierto(true)
+    }
+
+    if (cargando) {
+        return <div className="text-center p-8">Cargando registros...</div>
     }
 
     return (
@@ -23,27 +69,37 @@ export default function RegisterTable() {
                         <tr>
                             <th className="border p-3 text-left">ID</th>
                             <th className="border p-3 text-left">Fecha</th>
+                            <th className="border p-3 text-left">Horario</th>
                             <th className="border p-3 text-left">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((row, idx) => (
-                            <tr
-                                key={row.id}
-                                className={idx % 2 === 0 ? 'bg-gray-100' : 'bg-white'}
-                            >
-                                <td className="border p-3">{row.id}</td>
-                                <td className="border p-3">{row.fecha}</td>
-                                <td className="border p-3">
-                                    <button
-                                        onClick={() => handleVerMas(row)}
-                                        className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
-                                    >
-                                        Ver más
-                                    </button>
+                        {dias.length === 0 ? (
+                            <tr>
+                                <td colSpan="4" className="border p-3 text-center text-gray-500">
+                                    No hay registros de días trabajados
                                 </td>
                             </tr>
-                        ))}
+                        ) : (
+                            dias.map((row, idx) => (
+                                <tr
+                                    key={row.id}
+                                    className={idx % 2 === 0 ? 'bg-gray-100' : 'bg-white'}
+                                >
+                                    <td className="border p-3">{row.id}</td>
+                                    <td className="border p-3">{row.fecha}</td>
+                                    <td className="border p-3">{row.horario}</td>
+                                    <td className="border p-3">
+                                        <button
+                                            onClick={() => handleVerMas(row)}
+                                            className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer"
+                                        >
+                                            Ver más
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
