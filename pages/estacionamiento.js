@@ -129,11 +129,10 @@ export default function Estacionamiento() {
 
 
   const agregarVehiculo = (nuevoVehiculo) => {
-    const colorAleatorio = colores[Math.floor(Math.random() * colores.length)];
     const vehiculo = {
       ...nuevoVehiculo,
       horaEntrada: nuevoVehiculo.entrada,
-      color: colorAleatorio,
+      color: nuevoVehiculo.color || colores[Math.floor(Math.random() * colores.length)],
     };
     setVehiculos([...vehiculos, vehiculo]);
   };
