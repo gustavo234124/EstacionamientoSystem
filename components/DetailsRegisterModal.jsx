@@ -4,40 +4,60 @@ export default function DetallesRegistroModal({
     isOpen,
     onClose,
     registroId,
-    fecha
+    fecha,
+    fechaOriginal
 }) {
     const [detalles, setDetalles] = useState([])
     const [cargando, setCargando] = useState(false)
 
     useEffect(() => {
-        if (isOpen && registroId) {
-            setCargando(true)
-            // Simular delay de API
-            setTimeout(() => {
-                // Datos hardcodeados por registro
-                const detallesData = {
-                    1: [
-                        { id: 1, nombre: 'Juan', placas: 'Snt1068', 'Hora Entrada': '10:00', 'Hora Salida': '11:00', 'Costo': '$15' },
-                        { id: 2, nombre: 'María', placas: 'Snt1069', 'Hora Entrada': '10:30', 'Hora Salida': '11:30', 'Costo': '$30' },
-                    ],
-                    2: [
-                        { id: 3, nombre: 'Carlos', placas: 'Snt1070', 'Hora Entrada': '09:00', 'Hora Salida': '10:00', 'Costo': '$15' },
-                        { id: 4, nombre: 'Ana', placas: 'Snt1071', 'Hora Entrada': '09:15', 'Hora Salida': '10:15', 'Costo': '$15' },
-                    ],
-                }
-
-                setDetalles(detallesData[registroId] || [])
-                setCargando(false)
-            }, 500)
+        if (isOpen && fechaOriginal) {
+            cargarVehiculos()
         }
-    }, [isOpen, registroId])
+    }, [isOpen, fechaOriginal])
+
+    const cargarVehiculos = async () => {
+        setCargando(true)
+        try {
+            const response = await fetch(`/api/vehiculos/por-fecha?fecha=${fechaOriginal}`)
+            const data = await response.json()
+
+            if (!Array.isArray(data)) {
+                console.error('La respuesta no es un array:', data)
+                setDetalles([])
+                setCargando(false)
+                return
+            }
+
+            // Formatear los datos
+            const vehiculosFormateados = data.map(v => ({
+                id: v.id,
+                nombre: v.nombre,
+                placas: v.placas,
+                observaciones: v.observaciones,
+                horaEntrada: new Date(v.entrada).toLocaleTimeString('es-MX', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                horaSalida: new Date(v.salida).toLocaleTimeString('es-MX', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                costo: parseFloat(v.costo || 0)
+            }))
+
+            setDetalles(vehiculosFormateados)
+            setCargando(false)
+        } catch (error) {
+            console.error('Error al cargar vehículos:', error)
+            setDetalles([])
+            setCargando(false)
+        }
+    }
 
     if (!isOpen) return null
 
-    const totalIngresos = detalles.reduce((sum, row) => {
-        const costo = parseFloat(row.Costo.replace('$', ''))
-        return sum + costo
-    }, 0)
+    const totalIngresos = detalles.reduce((sum, row) => sum + row.costo, 0)
 
     return (
         <div
@@ -60,7 +80,9 @@ export default function DetallesRegistroModal({
 
                 <div className="p-4">
                     {cargando ? (
-                        <p>Cargando...</p>
+                        <p className="text-center py-8">Cargando vehículos...</p>
+                    ) : detalles.length === 0 ? (
+                        <p className="text-center py-8 text-gray-500">No hay vehículos registrados para este día</p>
                     ) : (
                         <table className="w-full border-collapse border border-gray-300">
                             <thead className="bg-gray-200">
@@ -79,9 +101,9 @@ export default function DetallesRegistroModal({
                                         <td className="border p-2">{row.id}</td>
                                         <td className="border p-2">{row.nombre}</td>
                                         <td className="border p-2">{row.placas}</td>
-                                        <td className="border p-2">{row['Hora Entrada']}</td>
-                                        <td className="border p-2">{row['Hora Salida']}</td>
-                                        <td className="border p-2">{row.Costo}</td>
+                                        <td className="border p-2">{row.horaEntrada}</td>
+                                        <td className="border p-2">{row.horaSalida}</td>
+                                        <td className="border p-2">${row.costo.toFixed(2)}</td>
                                     </tr>
                                 ))}
                             </tbody>
