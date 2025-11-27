@@ -26,7 +26,10 @@ export default function RegisterTable() {
 
             // Formatear los datos
             const diasFormateados = data.map(dia => {
-                const fecha = new Date(dia.fecha).toLocaleDateString('es-MX')
+                const fechaObj = new Date(dia.fecha)
+                const fechaFormateada = fechaObj.toLocaleDateString('es-MX')
+                const fechaOriginal = dia.fecha // Guardar formato original YYYY-MM-DD para API
+
                 const horaInicio = new Date(dia.hora_inicio).toLocaleTimeString('es-MX', {
                     hour: '2-digit',
                     minute: '2-digit'
@@ -38,7 +41,8 @@ export default function RegisterTable() {
 
                 return {
                     ...dia,
-                    fecha,
+                    fecha: fechaFormateada,
+                    fechaOriginal,
                     horario: `${horaInicio} - ${horaFin}`
                 }
             })
@@ -109,6 +113,7 @@ export default function RegisterTable() {
                 onClose={() => setModalAbierto(false)}
                 registroId={registroSeleccionado?.id}
                 fecha={registroSeleccionado?.fecha}
+                fechaOriginal={registroSeleccionado?.fechaOriginal}
             />
         </>
     )
