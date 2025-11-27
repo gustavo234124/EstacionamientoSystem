@@ -43,7 +43,9 @@ export default function RegisterTable() {
                     ...dia,
                     fecha: fechaFormateada,
                     fechaOriginal,
-                    horario: `${horaInicio} - ${horaFin}`
+                    horario: `${horaInicio} - ${horaFin}`,
+                    horaInicioISO: new Date(dia.hora_inicio).toISOString(),
+                    horaFinISO: new Date(dia.hora_fin).toISOString()
                 }
             })
 
@@ -113,7 +115,8 @@ export default function RegisterTable() {
                 onClose={() => setModalAbierto(false)}
                 registroId={registroSeleccionado?.id}
                 fecha={registroSeleccionado?.fecha}
-                fechaOriginal={registroSeleccionado?.fechaOriginal}
+                horaInicio={registroSeleccionado?.horaInicioISO}
+                horaFin={registroSeleccionado?.horaFinISO}
             />
         </>
     )

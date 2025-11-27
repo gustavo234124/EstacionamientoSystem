@@ -5,21 +5,22 @@ export default function DetallesRegistroModal({
     onClose,
     registroId,
     fecha,
-    fechaOriginal
+    horaInicio,
+    horaFin
 }) {
     const [detalles, setDetalles] = useState([])
     const [cargando, setCargando] = useState(false)
 
     useEffect(() => {
-        if (isOpen && fechaOriginal) {
+        if (isOpen && horaInicio && horaFin) {
             cargarVehiculos()
         }
-    }, [isOpen, fechaOriginal])
+    }, [isOpen, horaInicio, horaFin])
 
     const cargarVehiculos = async () => {
         setCargando(true)
         try {
-            const response = await fetch(`/api/vehiculos/por-fecha?fecha=${fechaOriginal}`)
+            const response = await fetch(`/api/vehiculos/por-fecha?horaInicio=${encodeURIComponent(horaInicio)}&horaFin=${encodeURIComponent(horaFin)}`)
             const data = await response.json()
 
             if (!Array.isArray(data)) {
