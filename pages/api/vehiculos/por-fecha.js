@@ -2,16 +2,20 @@ import { neon } from '@neondatabase/serverless';
 
 export default async function handler(req, res) {
     if (req.method === 'GET') {
-        const { fecha } = req.query;
+        const { horaInicio, horaFin } = req.query;
 
-        if (!fecha) {
-            return res.status(400).json({ error: 'Fecha es requerida' });
+        if (!horaInicio || !horaFin) {
+            return res.status(400).json({ error: 'horaInicio y horaFin son requeridos' });
         }
 
         try {
             const sql = neon(process.env.POSTGRES_URL);
 
-            // Obtener vehículos de la fecha específica que ya fueron terminados
+            // Convertir a objetos Date para asegurar comparación correcta
+            const startDate = new Date(horaInicio);
+            const endDate = new Date(horaFin);
+
+            // Obtener vehículos dentro del rango de tiempo de la sesión
             const result = await sql`
                 SELECT 
                     id,
@@ -22,14 +26,15 @@ export default async function handler(req, res) {
                     salida,
                     precio as costo
                 FROM registros 
-                WHERE DATE(salida) = ${fecha}
-                AND salida IS NOT NULL
+                WHERE salida IS NOT NULL
+                AND salida >= ${startDate}
+                AND salida <= ${endDate}
                 ORDER BY salida ASC
             `;
 
             res.status(200).json(result);
         } catch (error) {
-            console.error('Error al obtener vehículos por fecha:', error);
+            console.error('Error al obtener vehículos por rango:', error);
             res.status(500).json({ error: error.message });
         }
     } else {

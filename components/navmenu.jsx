@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 export default function Navmenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
 
   return (
     <>
@@ -26,29 +28,33 @@ export default function Navmenu() {
         className={`fixed top-0 left-0 h-full bg-gray-800 rounded-tr-4xl rounded-br-4xl text-white transition-all duration-300 ease-in-out z-40 
         md:w-64 
         ${isOpen ? 'w-64' : 'w-0'} 
-        overflow-hidden`}
-        
-      >
-                    <h2 className="text-2xl text-center pt-5 font-bold mb-8">Menú</h2>
+        overflow-hidden flex flex-col`}
 
-        <div className="p-6 flex flex-col justify-center h-full text-center">
-            
-          <div>
-            <nav>
-              <ul className="space-y-4">
-                <li>
-                  <a href="/estacionamiento" className="block py-2 px-4 text-3xl hover:bg-gray-700 rounded">
-                    Inicio
-                  </a>
-                </li>
-                <li>
-                  <a href="/registros" className="block py-2 px-4 text-2xl hover:bg-gray-700 rounded">
-                    Registros
-                  </a>
-                </li>
-              </ul>
-            </nav>
+      >
+        {/* Usuario - Fijo arriba */}
+        {session && (
+          <div className="p-6 pb-4 border-b border-gray-600 text-center">
+            <p className="text-sm text-gray-400">Usuario</p>
+            <p className="text-lg font-semibold">{session.user.name}</p>
           </div>
+        )}
+
+        {/* Navegación - Centrada verticalmente */}
+        <div className="flex-1 flex items-center justify-center text-center">
+          <nav>
+            <ul className="space-y-4">
+              <li>
+                <a href="/estacionamiento" className="block py-2 px-4 text-3xl hover:bg-gray-700 rounded">
+                  Inicio
+                </a>
+              </li>
+              <li>
+                <a href="/registros" className="block py-2 px-4 text-2xl hover:bg-gray-700 rounded">
+                  Registros
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
 
@@ -56,8 +62,8 @@ export default function Navmenu() {
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 backdrop-blur-sm bg-white/10 z-30 md:hidden"  
-      />
+          className="fixed inset-0 backdrop-blur-sm bg-white/10 z-30 md:hidden"
+        />
       )}
     </>
   );

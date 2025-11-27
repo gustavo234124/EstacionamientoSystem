@@ -31,6 +31,10 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecau
 
     localStorage.setItem('horaInicioDia', ahoraLocal);
     setDiaIniciado(true);
+    // Forzar recarga de vehículos atendidos para que empiece en 0
+    if (window.location.reload) {
+      window.location.reload();
+    }
   };
 
   const handleClickTerminarDia = () => {
