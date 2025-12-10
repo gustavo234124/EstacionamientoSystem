@@ -3,6 +3,7 @@ import Navmenu from '../components/navmenu.jsx';
 import StartDay from '../components/startDay.jsx';
 import VehicleCard from '../components/vehicleCard.jsx';
 import EndVehicle from '../components/endVehicle.jsx';
+import SearchBar from '../components/searchBar.jsx';
 
 export default function Estacionamiento() {
   const [vehiculos, setVehiculos] = useState([]);
@@ -12,6 +13,7 @@ export default function Estacionamiento() {
   const [totalRecaudado, setTotalRecaudado] = useState(0);
   const [vehiculosAtendidos, setVehiculosAtendidos] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [busqueda, setBusqueda] = useState('');
 
   const colores = [
     'from-orange-400 to-orange-600',
@@ -194,6 +196,8 @@ export default function Estacionamiento() {
           vehiculosAtendidos={vehiculosAtendidos}
         />
 
+        <SearchBar onSearch={setBusqueda} />
+
         {cargando ? (
           <div className="text-center text-gray-600 mt-20">
             <p className="text-2xl font-bold">Cargando vehículos...</p>
@@ -201,13 +205,17 @@ export default function Estacionamiento() {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-20">
-              {vehiculos.map(vehiculo => (
-                <VehicleCard
-                  key={vehiculo.id}
-                  vehiculo={vehiculo}
-                  onTerminar={abrirModalTerminar}
-                />
-              ))}
+              {vehiculos
+                .filter(vehiculo =>
+                  vehiculo.placas.toLowerCase().includes(busqueda.toLowerCase())
+                )
+                .map(vehiculo => (
+                  <VehicleCard
+                    key={vehiculo.id}
+                    vehiculo={vehiculo}
+                    onTerminar={abrirModalTerminar}
+                  />
+                ))}
             </div>
 
             {vehiculos.length === 0 && (
