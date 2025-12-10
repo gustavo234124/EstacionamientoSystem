@@ -5,6 +5,7 @@ export default function AddOperation({ agregarVehiculo }) {
   const [formData, setFormData] = useState({
     nombre: '',
     placas: '',
+    color: '',
     observaciones: ''
   });
 
@@ -30,31 +31,13 @@ export default function AddOperation({ agregarVehiculo }) {
       const data = await response.json();
 
       if (response.ok) {
-        // Generar color aleatorio
-        const colores = [
-          'from-orange-400 to-orange-600',
-          'from-blue-400 to-blue-600',
-          'from-purple-400 to-purple-600',
-          'from-green-400 to-green-600',
-          'from-red-400 to-red-600',
-          'from-pink-400 to-pink-600',
-          'from-yellow-400 to-yellow-600',
-          'from-indigo-400 to-indigo-600',
-          'from-teal-400 to-teal-600',
-        ];
-        const colorAleatorio = colores[Math.floor(Math.random() * colores.length)];
-
-        // Guardar color en localStorage usando el ID del vehículo
-        const coloresGuardados = JSON.parse(localStorage.getItem('vehiculosColores') || '{}');
-        coloresGuardados[data.id] = colorAleatorio;
-        localStorage.setItem('vehiculosColores', JSON.stringify(coloresGuardados));
-
-        // Agregar color al vehículo antes de pasarlo
-        agregarVehiculo({ ...data, color: colorAleatorio });
+        // Agregar vehículo a la lista
+        agregarVehiculo(data);
 
         setFormData({
           nombre: '',
           placas: '',
+          color: '',
           observaciones: ''
         });
         setModalOpen(false);
@@ -124,6 +107,21 @@ export default function AddOperation({ agregarVehiculo }) {
                     onChange={handleChange}
                     className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="ABC-1234"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                    Color
+                  </label>
+                  <input
+                    type="text"
+                    name="color"
+                    value={formData.color}
+                    onChange={handleChange}
+                    className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="Ej: Rojo, Azul..."
                     required
                   />
                 </div>

@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import AddOperation from './addOperation.jsx';
 import EndDay from './endDay.jsx';
 import CountPrice from './countPrice.jsx';
+import SearchBar from './searchBar.jsx';
 
-export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecaudado, vehiculosAtendidos }) {
+export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecaudado, vehiculosAtendidos, onSearch }) {
   const [diaIniciado, setDiaIniciado] = useState(false);
   const [modalEndDay, setModalEndDay] = useState(false);
   const [modalAdvertencia, setModalAdvertencia] = useState(false);
   const [mounted, setMounted] = useState(false);
+
 
   useEffect(() => {
     setMounted(true);
@@ -96,18 +98,23 @@ export default function StartDay({ agregarVehiculo, vehiculosActivos, totalRecau
           Comenzar Día
         </button>
       ) : (
-        <div className="absolute top-3 left-20 md:top-4 md:left-80 flex gap-4 items-center">
-          <button
-            onClick={handleClickTerminarDia}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-          >
-            Terminar Día
-          </button>
+        <div className="absolute top-3 left-20 md:top-4 md:left-80 flex flex-col md:flex-row gap-4 items-start md:items-center">
+          <div className="flex gap-4 items-center">
+            <button
+              onClick={handleClickTerminarDia}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            >
+              Terminar Día
+            </button>
 
-          <AddOperation agregarVehiculo={agregarVehiculo} />
+            <AddOperation agregarVehiculo={agregarVehiculo} />
 
-          <CountPrice totalRecaudado={totalRecaudado} />
+            <CountPrice totalRecaudado={totalRecaudado} />
+          </div>
 
+          <div className="w-full md:w-auto">
+            <SearchBar onSearch={onSearch} />
+          </div>
         </div>
       )}
 

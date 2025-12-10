@@ -39,7 +39,7 @@ export default function VehicleCard({ vehiculo, onTerminar }) {
   };
 
   return (
-    <div className={`bg-gradient-to-br ${vehiculo.color} rounded-2xl p-6 shadow-lg text-white`}>
+    <div className={`bg-gradient-to-br ${vehiculo.gradient} rounded-2xl p-6 shadow-lg text-white`}>
       {/* Nombre */}
       <div className="mb-3">
         <p className="text-sm font-semibold opacity-90">Nombre</p>
@@ -50,6 +50,12 @@ export default function VehicleCard({ vehiculo, onTerminar }) {
       <div className="mb-3">
         <p className="text-sm font-semibold opacity-90">Placas</p>
         <p className="text-lg font-bold tracking-wider">{vehiculo.placas}</p>
+      </div>
+
+      {/* Color */}
+      <div className="mb-3">
+        <p className="text-sm font-semibold opacity-90">Color</p>
+        <p className="text-lg font-bold">{vehiculo.color}</p>
       </div>
 
       {/* Hora de entrada */}

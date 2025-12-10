@@ -25,7 +25,7 @@ export default async function handler(req, res) {
                     entrada,
                     salida,
                     precio as costo
-                FROM registros 
+                FROM registros z
                 WHERE salida IS NOT NULL
                 AND salida >= ${startDate}
                 AND salida <= ${endDate}

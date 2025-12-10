@@ -13,6 +13,8 @@ export default function Estacionamiento() {
   const [vehiculosAtendidos, setVehiculosAtendidos] = useState(0);
   const [mounted, setMounted] = useState(false);
 
+  const [busqueda, setBusqueda] = useState('');
+
   const colores = [
     'from-orange-400 to-orange-600',
     'from-blue-400 to-blue-600',
@@ -100,23 +102,12 @@ export default function Estacionamiento() {
         return;
       }
 
-      // Cargar colores desde localStorage
-      const coloresGuardados = JSON.parse(localStorage.getItem('vehiculosColores') || '{}');
-
       const vehiculosConColor = data.map(v => ({
         ...v,
         horaEntrada: new Date(v.entrada).toISOString(),
-        color: coloresGuardados[v.id] || colores[Math.floor(Math.random() * colores.length)]
+        // Si no tiene color (registros viejos), asignar uno aleatorio pero NO guardarlo en DB por ahora
+        gradient: colores[Math.floor(Math.random() * colores.length)]
       }));
-
-      // Guardar colores nuevos en localStorage
-      const nuevosColores = { ...coloresGuardados };
-      vehiculosConColor.forEach(v => {
-        if (!nuevosColores[v.id]) {
-          nuevosColores[v.id] = v.color;
-        }
-      });
-      localStorage.setItem('vehiculosColores', JSON.stringify(nuevosColores));
 
       setVehiculos(vehiculosConColor);
       setCargando(false);
@@ -129,11 +120,16 @@ export default function Estacionamiento() {
 
 
   const agregarVehiculo = (nuevoVehiculo) => {
+    // Asignar un gradiente aleatorio del array de colores
+    const gradienteAleatorio = colores[Math.floor(Math.random() * colores.length)];
+
     const vehiculo = {
       ...nuevoVehiculo,
-      horaEntrada: nuevoVehiculo.entrada,
-      color: nuevoVehiculo.color || colores[Math.floor(Math.random() * colores.length)],
+      horaEntrada: new Date(nuevoVehiculo.entrada).toISOString(),
+      gradient: gradienteAleatorio,
     };
+
+    console.log('Vehículo agregado con gradient:', vehiculo); // Debug
     setVehiculos([...vehiculos, vehiculo]);
   };
 
@@ -192,7 +188,9 @@ export default function Estacionamiento() {
           vehiculosActivos={vehiculos.length}
           totalRecaudado={totalRecaudado}
           vehiculosAtendidos={vehiculosAtendidos}
+          onSearch={setBusqueda}
         />
+
 
         {cargando ? (
           <div className="text-center text-gray-600 mt-20">
@@ -201,13 +199,18 @@ export default function Estacionamiento() {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-20">
-              {vehiculos.map(vehiculo => (
-                <VehicleCard
-                  key={vehiculo.id}
-                  vehiculo={vehiculo}
-                  onTerminar={abrirModalTerminar}
-                />
-              ))}
+              {vehiculos
+                .filter(vehiculo =>
+                  vehiculo.placas.toLowerCase().includes(busqueda.toLowerCase()) ||
+                  vehiculo.nombre.toLowerCase().includes(busqueda.toLowerCase())
+                )
+                .map(vehiculo => (
+                  <VehicleCard
+                    key={vehiculo.id}
+                    vehiculo={vehiculo}
+                    onTerminar={abrirModalTerminar}
+                  />
+                ))}
             </div>
 
             {vehiculos.length === 0 && (

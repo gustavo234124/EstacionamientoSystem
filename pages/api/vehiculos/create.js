@@ -13,8 +13,8 @@ export default async function handler(req, res) {
             const ahoraLocal = localTime.toISOString().replace('Z', '-06:00');
 
             const result = await sql`
-                INSERT INTO registros (nombre, placas, observaciones, entrada) 
-                VALUES (${nombre}, ${placas}, ${observaciones || null}, ${ahoraLocal}) 
+                INSERT INTO registros (nombre, placas, observaciones, entrada, color) 
+                VALUES (${nombre}, ${placas}, ${observaciones || null}, ${ahoraLocal}, ${req.body.color}) 
                 RETURNING *
             `;
 
