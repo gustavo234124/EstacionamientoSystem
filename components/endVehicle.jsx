@@ -62,6 +62,11 @@ export default function EndVehicle({ isOpen, vehiculo, onClose, onConfirm }) {
             <span className="font-bold text-lg">{vehiculo.placas}</span>
           </div>
 
+          <div className="flex justify-between items-center border-b pb-2">
+            <span className="text-gray-600">Color</span>
+            <span className="font-bold text-lg">{vehiculo.color}</span>
+          </div>
+
 
           <div className="flex justify-between items-center border-b pb-2">
             <span className="text-gray-600">Hora de entrada</span>
