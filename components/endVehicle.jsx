@@ -17,7 +17,6 @@ export default function EndVehicle({ isOpen, vehiculo, onClose, onConfirm }) {
 
       setTiempoTotal({ horas, minutos });
 
-      // Formatear horas
       const options = { hour: '2-digit', minute: '2-digit', hour12: true };
       setHorasStr({
         entrada: entrada.toLocaleTimeString('es-MX', options),
