@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { usePWAInstall } from '../hooks/usePWAInstall';
 
 export default function Navmenu() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
+  const { isInstallable, install } = usePWAInstall();
 
   return (
     <>
@@ -53,6 +55,16 @@ export default function Navmenu() {
                   Registros
                 </a>
               </li>
+              {isInstallable && (
+                <li>
+                  <button
+                    onClick={install}
+                    className="w-full text-left block py-2 px-4 text-2xl hover:bg-gray-700 rounded text-blue-400 font-bold"
+                  >
+                    Descargar App
+                  </button>
+                </li>
+              )}
             </ul>
           </nav>
         </div>
