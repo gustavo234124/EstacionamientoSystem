@@ -1,16 +1,20 @@
-import { neon } from '@neondatabase/serverless';
+// SANDBOX VERSION - Using mock data instead of real database
+import { mockDB } from '../../../lib/mockData';
 
 export default async function handler(req, res) {
     if (req.method === 'GET') {
         try {
-            const sql = neon(process.env.POSTGRES_URL);
+            // Obtener todos los días desde mock data
+            const result = await mockDB.dias.getAll();
 
-            const result = await sql`
-                SELECT * FROM dias_trabajados 
-                ORDER BY fecha DESC, hora_inicio DESC
-            `;
+            // Ordenar por fecha descendente
+            const sorted = result.sort((a, b) => {
+                const dateA = new Date(a.fecha + ' ' + a.hora_inicio);
+                const dateB = new Date(b.fecha + ' ' + b.hora_inicio);
+                return dateB - dateA;
+            });
 
-            res.status(200).json(result);
+            res.status(200).json(sorted);
         } catch (error) {
             console.error('Error al obtener días:', error);
             res.status(500).json({ error: error.message });

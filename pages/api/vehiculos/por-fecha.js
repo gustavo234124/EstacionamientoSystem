@@ -1,4 +1,5 @@
-import { neon } from '@neondatabase/serverless';
+// SANDBOX VERSION - Using mock data instead of real database
+import { mockDB } from '../../../lib/mockData';
 
 export default async function handler(req, res) {
     if (req.method === 'GET') {
@@ -9,28 +10,28 @@ export default async function handler(req, res) {
         }
 
         try {
-            const sql = neon(process.env.POSTGRES_URL);
+            // Obtener registros en el rango de fechas
+            const registros = await mockDB.registros.getByDateRange(horaInicio, horaFin);
 
-            // Convertir a objetos Date para asegurar comparación correcta
-            const startDate = new Date(horaInicio);
-            const endDate = new Date(horaFin);
+            console.log('Registros encontrados (brutos):', registros.length);
 
-            // Obtener vehículos dentro del rango de tiempo de la sesión
-            const result = await sql`
-                SELECT 
-                    id,
-                    nombre,
-                    placas,
-                    observaciones,
-                    entrada,
-                    salida,
-                    precio as costo
-                FROM registros z
-                WHERE salida IS NOT NULL
-                AND salida >= ${startDate}
-                AND salida <= ${endDate}
-                ORDER BY salida ASC
-            `;
+            // Filtrar solo los que tienen salida y formatear
+            const result = registros
+                .filter(r => r.salida !== null)
+                .filter(r => {
+                    const salida = new Date(r.salida);
+                    return salida >= new Date(horaInicio) && salida <= new Date(horaFin);
+                })
+                .map(r => ({
+                    id: r.id,
+                    nombre: r.nombre,
+                    placas: r.placas,
+                    observaciones: r.observaciones,
+                    entrada: r.entrada,
+                    salida: r.salida,
+                    costo: r.precio
+                }))
+                .sort((a, b) => new Date(a.salida) - new Date(b.salida));
 
             res.status(200).json(result);
         } catch (error) {

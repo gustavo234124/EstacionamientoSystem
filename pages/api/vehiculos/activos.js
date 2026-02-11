@@ -1,14 +1,11 @@
-import { neon } from '@neondatabase/serverless';
+// SANDBOX VERSION - Using mock data instead of real database
+import { mockDB } from '../../../lib/mockData';
 
 export default async function handler(req, res) {
     if (req.method === 'GET') {
         try {
-            const sql = neon(process.env.POSTGRES_URL);
-            const result = await sql`
-                SELECT * FROM registros 
-                WHERE salida IS NULL 
-                ORDER BY entrada DESC
-            `;
+            // Usar mock data en lugar de base de datos real
+            const result = await mockDB.registros.getActivos();
 
             res.status(200).json(result);
         } catch (error) {

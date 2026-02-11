@@ -1,7 +1,7 @@
+// SANDBOX VERSION - Using mock data instead of real database
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { neon } from '@neondatabase/serverless'
-import bcrypt from 'bcryptjs'
+import { mockDB } from '../../../lib/mockData'
 
 export const authOptions = {
     providers: [
@@ -13,24 +13,15 @@ export const authOptions = {
             },
             async authorize(credentials) {
                 try {
-                    const sql = neon(process.env.POSTGRES_URL)
+                    // Buscar usuario en mock data
+                    const usuario = await mockDB.usuarios.findByUsername(credentials.username)
 
-                    // Buscar usuario
-                    const usuarios = await sql`
-            SELECT * FROM usuarios 
-            WHERE nombre_usuario = ${credentials.username}
-          `
-
-                    if (usuarios.length === 0) {
+                    if (!usuario) {
                         return null
                     }
 
-                    const usuario = usuarios[0]
-
-                    // Verificar contraseña
-                    const passwordMatch = await bcrypt.compare(credentials.password, usuario.contrasena)
-
-                    if (!passwordMatch) {
+                    // Verificar contraseña (en demo no está hasheada)
+                    if (credentials.password !== usuario.contrasena) {
                         return null
                     }
 
@@ -38,7 +29,7 @@ export const authOptions = {
                     return {
                         id: usuario.id.toString(),
                         name: usuario.nombre_usuario,
-                        email: usuario.nombre_usuario // NextAuth requiere email, usamos username
+                        email: usuario.email
                     }
                 } catch (error) {
                     console.error('Error en authorize:', error)
@@ -70,7 +61,7 @@ export const authOptions = {
             return session
         }
     },
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET || 'demo-secret-for-portfolio-only',
 }
 
 export default NextAuth(authOptions)

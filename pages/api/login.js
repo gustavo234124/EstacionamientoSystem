@@ -1,5 +1,5 @@
-import { neon } from '@neondatabase/serverless';
-import bcrypt from 'bcryptjs';
+// SANDBOX VERSION - Using mock data instead of real database
+import { mockDB } from '../../lib/mockData';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -13,24 +13,15 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Usuario y contraseña requeridos' });
     }
 
-    const sql = neon(process.env.POSTGRES_URL);
+    // Buscar usuario en mock data
+    const usuario = await mockDB.usuarios.findByUsername(username);
 
-    // Buscar usuario
-    const usuarios = await sql`
-      SELECT * FROM usuarios 
-      WHERE nombre_usuario = ${username}
-    `;
-
-    if (usuarios.length === 0) {
+    if (!usuario) {
       return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
     }
 
-    const usuario = usuarios[0];
-
-    // Verificar contraseña
-    const passwordMatch = await bcrypt.compare(password, usuario.contrasena);
-
-    if (!passwordMatch) {
+    // Verificar contraseña (en demo no está hasheada)
+    if (password !== usuario.contrasena) {
       return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
     }
 

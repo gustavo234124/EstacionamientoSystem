@@ -1,30 +1,23 @@
-import { neon } from '@neondatabase/serverless';
+// SANDBOX VERSION - Using mock data instead of real database
+import { mockDB } from '../../../lib/mockData';
 
 export default async function handler(req, res) {
     if (req.method === 'GET') {
         try {
-            const sql = neon(process.env.POSTGRES_URL);
             const { horaInicio } = req.query;
 
-            let result;
+            let cantidad = 0;
 
             if (horaInicio) {
-                result = await sql`
-                    SELECT COUNT(*) as cantidad
-                    FROM registros 
-                    WHERE salida IS NOT NULL
-                    AND (salida::timestamp AT TIME ZONE 'America/Mexico_City') >= ${horaInicio}::timestamptz
-                `;
+                // Contar desde hora específica
+                cantidad = await mockDB.registros.getCountSinceTime(horaInicio);
             } else {
-                result = await sql`
-                    SELECT COUNT(*) as cantidad
-                    FROM registros 
-                    WHERE DATE(salida AT TIME ZONE 'America/Mexico_City') = CURRENT_DATE
-                    AND salida IS NOT NULL
-                `;
+                // Contar del día actual
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+                cantidad = await mockDB.registros.getCountSinceTime(hoy.toISOString());
             }
 
-            const cantidad = parseInt(result[0].cantidad);
             res.status(200).json({ cantidad });
         } catch (error) {
             console.error('Error en vehiculos-atendidos:', error);

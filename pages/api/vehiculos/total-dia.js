@@ -1,33 +1,23 @@
-import { neon } from '@neondatabase/serverless';
+// SANDBOX VERSION - Using mock data instead of real database
+import { mockDB } from '../../../lib/mockData';
 
 export default async function handler(req, res) {
     if (req.method === 'GET') {
         try {
-            const sql = neon(process.env.POSTGRES_URL);
             const { horaInicio } = req.query;
 
-            let result;
+            let total = 0;
 
             if (horaInicio) {
-
-                result = await sql`
-                    SELECT 
-                        COALESCE(SUM(precio), 0) as total,
-                        COUNT(*) as cantidad
-                    FROM registros 
-                    WHERE salida IS NOT NULL
-                    AND (salida::timestamp AT TIME ZONE 'America/Mexico_City') >= ${horaInicio}::timestamptz
-                `;
+                // Calcular total desde hora específica
+                total = await mockDB.registros.getTotalSinceTime(horaInicio);
             } else {
-                result = await sql`
-                    SELECT COALESCE(SUM(precio), 0) as total
-                    FROM registros 
-                    WHERE DATE(salida AT TIME ZONE 'America/Mexico_City') = CURRENT_DATE
-                    AND salida IS NOT NULL
-                `;
+                // Calcular total del día actual
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+                total = await mockDB.registros.getTotalSinceTime(hoy.toISOString());
             }
 
-            const total = parseFloat(result[0].total);
             res.status(200).json({ total });
         } catch (error) {
             console.error('Error en total-dia:', error);
