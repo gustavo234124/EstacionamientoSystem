@@ -92,7 +92,7 @@ export default function RegisterTable() {
                                     key={row.id}
                                     className={idx % 2 === 0 ? 'bg-gray-100' : 'bg-white'}
                                 >
-                                    <td className="border p-3">{row.id}</td>
+                                    <td className="border p-3">{idx + 1}</td>
                                     <td className="border p-3">{row.fecha}</td>
                                     <td className="border p-3">{row.horario}</td>
                                     <td className="border p-3">

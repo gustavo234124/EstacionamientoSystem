@@ -99,7 +99,7 @@ export default function DetallesRegistroModal({
                             <tbody>
                                 {detalles.map((row, idx) => (
                                     <tr key={row.id} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                                        <td className="border p-2">{row.id}</td>
+                                        <td className="border p-2">{idx + 1}</td>
                                         <td className="border p-2">{row.nombre}</td>
                                         <td className="border p-2">{row.placas}</td>
                                         <td className="border p-2">{row.horaEntrada}</td>

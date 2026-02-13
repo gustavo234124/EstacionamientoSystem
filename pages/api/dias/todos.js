@@ -7,12 +7,8 @@ export default async function handler(req, res) {
             // Obtener todos los días desde mock data
             const result = await mockDB.dias.getAll();
 
-            // Ordenar por fecha descendente
-            const sorted = result.sort((a, b) => {
-                const dateA = new Date(a.fecha + ' ' + a.hora_inicio);
-                const dateB = new Date(b.fecha + ' ' + b.hora_inicio);
-                return dateB - dateA;
-            });
+            // Ordenar por ID ascendente para que aparezcan 1, 2, 3...
+            const sorted = result.sort((a, b) => a.id - b.id);
 
             res.status(200).json(sorted);
         } catch (error) {

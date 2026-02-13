@@ -31,7 +31,7 @@ export default async function handler(req, res) {
                     salida: r.salida,
                     costo: r.precio
                 }))
-                .sort((a, b) => new Date(a.salida) - new Date(b.salida));
+                .sort((a, b) => a.id - b.id);
 
             res.status(200).json(result);
         } catch (error) {
