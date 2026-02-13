@@ -61,7 +61,7 @@ export default function Home() {
       {/* Modal de Privacidad - Sandbox */}
       {showPrivacyModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-2xl max-w-lg w-full p-6 border-l-4 border-blue-600">
+          <div className="bg-white rounded-lg shadow-2xl max-w-lg w-full p-6 ">
             <div className="flex items-start mb-4">
               <div className="bg-blue-100 p-2 rounded-full mr-4 text-blue-600">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
@@ -82,7 +82,7 @@ export default function Home() {
                 La lógica de negocio y la interfaz son idénticas al sistema original, pero funciona con <strong>datos simulados</strong> y sin conexión a la base de datos productiva.
               </p>
               <div className="bg-gray-50 p-3 rounded text-sm text-gray-500 italic border border-gray-200">
-                <span className="font-semibold">Credenciales Demo:</span><br />
+                <span className="font-semibold">Credenciales:</span><br />
                 Usuario: <strong>demo</strong> / Contraseña: <strong>demo123</strong>
               </div>
             </div>
@@ -90,7 +90,7 @@ export default function Home() {
             <div className="flex justify-end">
               <button
                 onClick={() => setShowPrivacyModal(false)}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow-md transition-colors duration-200"
+                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded shadow-md transition-colors duration-200"
               >
                 Entendido, continuar
               </button>
